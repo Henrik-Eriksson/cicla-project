@@ -65,7 +65,7 @@ function login() {
   ) {
     localStorage.setItem("username", userName);
     localStorage.setItem("password", password);
-    window.open("homescreen.html", "_self");
+    window.open("/home", "_self");
   } else {
     alert("Incorrect username or password");
   }
