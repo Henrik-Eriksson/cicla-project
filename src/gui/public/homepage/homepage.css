@@ -1,0 +1,158 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  min-height: 100vh;
+  width: 100vw;
+  min-width: 100vw;
+  font-family: "Poppins", sans-serif;
+  background: white; /* White background behind card */
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: white;
+  overflow-x: hidden;
+}
+
+.home-card {
+  box-sizing: border-box;
+  background: url('/assets/static_map.png') center center / cover no-repeat white;
+  width: 95vw;
+  max-width: 420px;
+  min-width: 240px;
+  min-height: 97vh;
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: stretch;
+  /* padding and button styles as before */
+}
+
+
+.navbar {
+  width: 94.5%;
+  height: 62px;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 0 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  min-width: 40px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  color: #ff4b4b;
+  font-weight: bold;
+}
+
+.nav-title {
+  margin-left: 7px;
+  font-size: 18px;
+  color: #ff4b4b;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
+
+/* Place buttons inside card, overlay bottom */
+.find-nearest-btn {
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  background: #ff4b4b;
+  color: white;
+  border: none;
+  border-radius: 28px;
+  padding: 16px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 8px 22px rgba(255,75,75,0.08);
+  cursor: pointer;
+  min-width: 188px;
+  width: 40%;
+  max-width: 380px;
+}
+
+.find-nearest-btn:hover,
+.find-nearest-btn:active {
+  background: #e33c3c;
+}
+
+.help-btn {
+  position: absolute;
+  right: 20px;
+  bottom: 24px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 22px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.help-btn:hover,
+.help-btn:active {
+  background: #444;
+}
+
+.station-pin {
+  width: 32px;
+  height: 32px;
+  background: #4CAF50; /* Overridden by .green/.orange/.red */
+  border-radius: 50% 50% 50% 0;
+  border: 2px solid white;
+  transform: rotate(-45deg);
+  z-index: 3;
+  pointer-events: auto;
+}
+
+.station-pin.green { background: #4CAF50; }
+.station-pin.orange { background: #FFA726; }
+.station-pin.red { background: #FF5252; }
+
+.station-pin::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  left: 10px;
+  top: 8px;
+}

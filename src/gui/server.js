@@ -7,15 +7,16 @@ const PORT = 3000;
 // Serve static files (CSS, JS, images)
 app.use(express.static(path.join(__dirname, "public")));
 
-// Default route → login page
+//app.get("/", (req, res) => {
+   //login.html lives in public/login/
+//  res.sendFile(path.join(__dirname, "public", "login", "login.html"));
+//});
+
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "login.html"));
+  // homepage.html lives in public/homepage/
+  res.sendFile(path.join(__dirname, "public", "homepage", "homepage.html"));
 });
 
-// Route after login
-app.get("/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
-});
 
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
