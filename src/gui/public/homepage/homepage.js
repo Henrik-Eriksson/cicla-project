@@ -53,6 +53,87 @@ function setup() {
 
   // Help button
   helpBtn = createButton("?").addClass('help-btn').parent(homeCard);
+
+  // --- Account Drawer ---
+  accountDrawer = createDiv().addClass('account-drawer').parent(homeCard);
+
+  // Account drawer header
+  let header = createDiv().addClass('account-header').parent(accountDrawer);
+  createDiv('👤').addClass('account-avatar').parent(header);
+  let headerText = createDiv().parent(header);
+  createElement('div', 'My Account').addClass('account-title').parent(headerText);
+  createElement('div', 'Manage your profile and bikes').addClass('account-subtitle').parent(headerText);
+  let closeBtn = createButton('×').addClass('account-close-btn').parent(header);
+  closeBtn.mousePressed(closeDrawer);
+
+  // Tabs
+  let tabs = createDiv().addClass('account-tabs').parent(accountDrawer);
+  tabBtns = [
+    createButton('Info').addClass('account-tab-btn active').parent(tabs),
+    createButton('Password').addClass('account-tab-btn').parent(tabs),
+    createButton('My Bikes').addClass('account-tab-btn').parent(tabs)
+  ];
+  tabBtns[0].mousePressed(() => showTab(0));
+  tabBtns[1].mousePressed(() => showTab(1));
+  tabBtns[2].mousePressed(() => showTab(2));
+
+    // Info Tab
+  infoTab = createDiv().addClass('account-tab').parent(accountDrawer);
+  createElement('label', 'Full Name').parent(infoTab);
+  createInput('John Doe').parent(infoTab).attribute('readonly', true);
+  createElement('label', 'Email').parent(infoTab);
+  createInput('john.doe@example.com').parent(infoTab).attribute('readonly', true);
+  createElement('label', 'Phone Number').parent(infoTab);
+  createInput('+351 912 345 678').parent(infoTab).attribute('readonly', true);
+  createButton('Save Changes').addClass('account-save-btn').parent(infoTab);
+
+  // Password Tab
+  pwTab = createDiv().addClass('account-tab').parent(accountDrawer).style('display', 'none');
+  createElement('label', 'Current Password').parent(pwTab);
+  createInput('').attribute('type','password').parent(pwTab);
+  createElement('label', 'New Password').parent(pwTab);
+  createInput('').attribute('type','password').parent(pwTab);
+  createElement('label', 'Confirm New Password').parent(pwTab);
+  createInput('').attribute('type','password').parent(pwTab);
+  createButton('Change Password').addClass('account-save-btn').parent(pwTab);
+
+   // Bikes Tab
+  bikesTab = createDiv().addClass('account-tab').parent(accountDrawer).style('display', 'none');
+  let bikesAdd = createDiv().addClass('account-bikes-add').parent(bikesTab);
+  let bikeInput = createInput().attribute('placeholder','Bike name').parent(bikesAdd);
+  createButton('Add').addClass('bike-add-btn').parent(bikesAdd).mousePressed(()=>alert('Added: '+bikeInput.value()));
+
+  let bikesList = createDiv().addClass('account-bikes-list').parent(bikesTab);
+  addBikeCard('My Mountain Bike','MTB-2824-8471','15/01/2024', bikesList);
+  addBikeCard('City Cruiser','CTY-2824-3392','20/02/2024', bikesList);
+  addBikeCard('Electric Bike','ELB-2824-5618','10/03/2024', bikesList);
+
+    // --- Account Button Show/Hide ---
+  accountBtn.mousePressed(() => {
+    accountDrawer.addClass('open');
+    drawerOpen = true;
+  });
+
+  function closeDrawer() {
+    accountDrawer.removeClass('open');
+    drawerOpen = false;
+  }
+
+  function showTab(index) {
+    [infoTab, pwTab, bikesTab].forEach((tab, i) => {
+      tab.style('display', i === index ? '' : 'none');
+      tabBtns[i].removeClass('active');
+      if(i === index) tabBtns[i].addClass('active');
+    });
+  }
+}
+
+function addBikeCard(name, id, date, parent) {
+  let card = createDiv().addClass('bike-card').parent(parent);
+  createSpan('🚲').addClass('bike-icon').parent(card);
+  createSpan(name).parent(card);
+  createElement('div', id).addClass('bike-id').parent(card);
+  createElement('div', 'Added on '+date).addClass('bike-date').parent(card);
 }
 
 function addPin(xPercent, yPercent, color, stationName, bikes, total) {
@@ -72,36 +153,26 @@ let currentPopup = null;
 function showStationPopup(xPercent, yPercent, color, stationName, bikes, total) {
   if (currentPopup) currentPopup.remove();
 
-  currentPopup = createDiv();
-  currentPopup.addClass("station-popup");
-  currentPopup.parent(homeCard);
-
+  currentPopup = createDiv().addClass("station-popup").parent(homeCard);
   currentPopup.style('position', 'absolute');
   currentPopup.style('left', `calc(${xPercent}% - 70px)`);
   currentPopup.style('top', `calc(${yPercent}% - 110px)`);
 
-  currentPopup.html(
-    `<button class="popup-close-btn">×</button>
-     <b>${stationName}</b><br>
-     <span style="font-size:22px;">🚴‍♂️ <b>${bikes}/${total}</b> bikes available</span>
-     <br>
-     <button class="navigate-btn">Navigate</button>`
-  );
+  // Close button (p5.js)
+  let closeBtn = createButton("×").addClass("popup-close-btn").parent(currentPopup);
+  closeBtn.mousePressed(() => {
+    currentPopup.remove();
+    currentPopup = null;
+  });
 
-  // Native JS event for close button:
-  const closeBtn = currentPopup.elt.querySelector('.popup-close-btn');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', function() {
-      currentPopup.remove();
-      currentPopup = null;
-    });
-  }
+  // Title and info
+  createElement('b', stationName).parent(currentPopup);
+  createDiv(`🚴‍♂️ <b>${bikes}/${total}</b> bikes available`)
+    .style('font-size', '22px')
+    .style('margin-bottom', '9px')
+    .parent(currentPopup);
 
-  // Native JS event for navigate button (optional example):
-  const navBtn = currentPopup.elt.querySelector('.navigate-btn');
-  if (navBtn) {
-    navBtn.addEventListener('click', function() {
-      alert('Navigation not implemented.');
-    });
-  }
+  // "Navigate" button (p5.js)
+  let navBtn = createButton("Navigate").addClass("navigate-btn").parent(currentPopup);
+  navBtn.mousePressed(() => alert('Navigation not implemented.'));
 }
