@@ -1,4 +1,6 @@
 let userNameBox, passwordBox, loginButton, signupButton, title, subtitle, card, img;
+let registrationPopup, closePopupButton, regNameInput, regLastNameInput, regEmailInput, regPasswordInput, createAccountBtn;
+
 
 function setup() {
   noCanvas();
@@ -41,6 +43,9 @@ function setup() {
   signupButton.parent(card);
   signupButton.addClass("signup-btn");
 
+  // Sign up button handler triggers popup
+  signupButton.mousePressed(showRegistrationPopup);
+
   // Terms text
   let terms = createP(
     'By continuing, you agree to our <a href="#" style="color:#ff4b4b; text-decoration:none;">Terms and Conditions</a>'
@@ -53,11 +58,69 @@ function login() {
   let userName = userNameBox.value();
   let password = passwordBox.value();
 
-  if (userName === "user" && password === "pass") {
+  // Allow login with "user"/"pass" or "admin"/"password"
+  if (
+    (userName === "user" && password === "pass") || 
+    (userName === "admin" && password === "password")
+  ) {
     localStorage.setItem("username", userName);
     localStorage.setItem("password", password);
-    window.open("page2.html", "_self");
+    window.open("homescreen.html", "_self");
   } else {
     alert("Incorrect username or password");
   }
+}
+
+
+// Show registration popup
+function showRegistrationPopup() {
+  registrationPopup = createDiv();
+  registrationPopup.addClass("popup-overlay");
+
+  let popupCard = createDiv();
+  popupCard.addClass("registration-card");
+  popupCard.parent(registrationPopup);
+
+  let popupTitle = createElement("h2", "Register Account");
+  popupTitle.parent(popupCard);
+
+  regNameInput = createInput();
+  regNameInput.attribute("placeholder", "First name");
+  regNameInput.parent(popupCard);
+
+  regLastNameInput = createInput();
+  regLastNameInput.attribute("placeholder", "Last name");
+  regLastNameInput.parent(popupCard);
+
+  regEmailInput = createInput();
+  regEmailInput.attribute("placeholder", "Email");
+  regEmailInput.parent(popupCard);
+
+  regPasswordInput = createInput("", "password");
+  regPasswordInput.attribute("placeholder", "Password");
+  regPasswordInput.parent(popupCard);
+
+  createAccountBtn = createButton("Create Account");
+  createAccountBtn.parent(popupCard);
+  createAccountBtn.addClass("login-btn");
+  createAccountBtn.mousePressed(registerAccount);
+
+  closePopupButton = createButton("×");
+  closePopupButton.parent(popupCard);
+  closePopupButton.addClass("close-btn");
+  closePopupButton.mousePressed(closePopup);
+}
+
+function closePopup() {
+  registrationPopup.remove();
+}
+
+// Example registration action
+function registerAccount() {
+  let name = regNameInput.value();
+  let lastName = regLastNameInput.value();
+  let email = regEmailInput.value();
+  let password = regPasswordInput.value();
+  alert(`Account created for ${name} ${lastName}`);
+  closePopup();
 }
