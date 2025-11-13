@@ -1,126 +1,138 @@
-let userNameBox, passwordBox, loginButton, signupButton, title, subtitle, card, img;
-let registrationPopup, closePopupButton, regNameInput, regLastNameInput, regEmailInput, regPasswordInput, createAccountBtn;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAYJwO4MKFSCfM4iHUTuJTzTzGRkBKrtTI",
+  authDomain: "cicla-project.firebaseapp.com",
+  projectId: "cicla-project",
+  storageBucket: "cicla-project.firebasestorage.app",
+  messagingSenderId: "943033387656",
+  appId: "1:943033387656:web:c08795f4eed3a73279ad3d"
+};
 
-function setup() {
-  noCanvas();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-  // Create card container
-  card = createDiv();
-  card.addClass("login-card");
+// instance mode
+const sketch = (p) => {
+  let userNameBox, passwordBox, loginButton, signupButton, title, subtitle, card;
+  let registrationPopup, closePopupButton, regNameInput, regLastNameInput, regEmailInput, regPasswordInput, createAccountBtn;
 
-  // Add logo
-  let logo = createImg('assets/cicla_logo.png', 'Cicla Logo');
-  logo.parent(card);
-  logo.addClass('login-logo');
+  p.setup = () => {
+    console.log("setup running");
+    p.noCanvas();
 
-  // Title
-  title = createElement("h2", "Welcome!");
-  title.parent(card);
+    card = p.createDiv();
+    card.addClass("login-card");
 
-  // Subtitle
-  subtitle = createP("Log in to continue");
-  subtitle.parent(card);
-  
-  // Username input
-  userNameBox = createInput();
-  userNameBox.attribute("placeholder", "Enter your username");
-  userNameBox.parent(card);
+    const logo = p.createImg('assets/cicla_logo.png', 'Cicla Logo');
+    logo.parent(card);
+    logo.addClass('login-logo');
 
-  // Password input
-  passwordBox = createInput("", "password");
-  passwordBox.attribute("placeholder", "Enter your password");
-  passwordBox.parent(card);
+    title = p.createElement("h2", "Welcome!");
+    title.parent(card);
 
-  // Log in button
-  loginButton = createButton("Log in");
-  loginButton.parent(card);
-  loginButton.addClass("login-btn");
-  loginButton.mousePressed(login);
+    subtitle = p.createP("Log in to continue");
+    subtitle.parent(card);
 
-  // Sign up button
-  signupButton = createButton("Sign up");
-  signupButton.parent(card);
-  signupButton.addClass("signup-btn");
+    userNameBox = p.createInput();
+    userNameBox.attribute("placeholder", "Enter your email");
+    userNameBox.parent(card);
 
-  // Sign up button handler triggers popup
-  signupButton.mousePressed(showRegistrationPopup);
+    passwordBox = p.createInput("", "password");
+    passwordBox.attribute("placeholder", "Enter your password");
+    passwordBox.parent(card);
 
-  // Terms text
-  let terms = createP(
-    'By continuing, you agree to our <a href="#" style="color:#ff4b4b; text-decoration:none;">Terms and Conditions</a>'
-  );
-  terms.parent(card);
-  terms.addClass("terms");
-}
+    loginButton = p.createButton("Log in");
+    loginButton.parent(card);
+    loginButton.addClass("login-btn");
+    loginButton.mousePressed(login);
 
-function login() {
-  let userName = userNameBox.value();
-  let password = passwordBox.value();
+    signupButton = p.createButton("Sign up");
+    signupButton.parent(card);
+    signupButton.addClass("signup-btn");
+    signupButton.mousePressed(showRegistrationPopup);
 
-  // Allow login with "user"/"pass" or "admin"/"password"
-  if (
-    (userName === "user" && password === "pass") || 
-    (userName === "admin" && password === "password")
-  ) {
-    localStorage.setItem("username", userName);
-    localStorage.setItem("password", password);
-    window.open("/home", "_self");
-  } else {
-    alert("Incorrect username or password");
-  }
-}
+    const terms = p.createP('By continuing, you agree to our <a href="#" style="color:#ff4b4b; text-decoration:none;">Terms and Conditions</a>');
+    terms.parent(card);
+    terms.addClass("terms");
+  };
 
+  const login = async () => {
+    const email = userNameBox.value();
+    const password = passwordBox.value();
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      localStorage.setItem("userEmail", user.email);
+      window.open("/home", "_self");
+    } catch (err) {
+      console.error(err);
+      alert("Login failed: " + err.message);
+    }
+  };
 
-// Show registration popup
-function showRegistrationPopup() {
-  registrationPopup = createDiv();
-  registrationPopup.addClass("popup-overlay");
+  const showRegistrationPopup = () => {
+    registrationPopup = p.createDiv();
+    registrationPopup.addClass("popup-overlay");
 
-  let popupCard = createDiv();
-  popupCard.addClass("registration-card");
-  popupCard.parent(registrationPopup);
+    const popupCard = p.createDiv();
+    popupCard.addClass("registration-card");
+    popupCard.parent(registrationPopup);
 
-  let popupTitle = createElement("h2", "Register Account");
-  popupTitle.parent(popupCard);
+    const popupTitle = p.createElement("h2", "Register Account");
+    popupTitle.parent(popupCard);
 
-  regNameInput = createInput();
-  regNameInput.attribute("placeholder", "First name");
-  regNameInput.parent(popupCard);
+    regNameInput = p.createInput();
+    regNameInput.attribute("placeholder", "First name");
+    regNameInput.parent(popupCard);
 
-  regLastNameInput = createInput();
-  regLastNameInput.attribute("placeholder", "Last name");
-  regLastNameInput.parent(popupCard);
+    regLastNameInput = p.createInput();
+    regLastNameInput.attribute("placeholder", "Last name");
+    regLastNameInput.parent(popupCard);
 
-  regEmailInput = createInput();
-  regEmailInput.attribute("placeholder", "Email");
-  regEmailInput.parent(popupCard);
+    regEmailInput = p.createInput();
+    regEmailInput.attribute("placeholder", "Email");
+    regEmailInput.parent(popupCard);
 
-  regPasswordInput = createInput("", "password");
-  regPasswordInput.attribute("placeholder", "Password");
-  regPasswordInput.parent(popupCard);
+    regPasswordInput = p.createInput("", "password");
+    regPasswordInput.attribute("placeholder", "Password");
+    regPasswordInput.parent(popupCard);
 
-  createAccountBtn = createButton("Create Account");
-  createAccountBtn.parent(popupCard);
-  createAccountBtn.addClass("login-btn");
-  createAccountBtn.mousePressed(registerAccount);
+    createAccountBtn = p.createButton("Create Account");
+    createAccountBtn.parent(popupCard);
+    createAccountBtn.addClass("login-btn");
+    createAccountBtn.mousePressed(registerAccount);
 
-  closePopupButton = createButton("×");
-  closePopupButton.parent(popupCard);
-  closePopupButton.addClass("close-btn");
-  closePopupButton.mousePressed(closePopup);
-}
+    closePopupButton = p.createButton("×");
+    closePopupButton.parent(popupCard);
+    closePopupButton.addClass("close-btn");
+    closePopupButton.mousePressed(closePopup);
+  };
 
-function closePopup() {
-  registrationPopup.remove();
-}
+  const closePopup = () => {
+    registrationPopup.remove();
+  };
 
-// Example registration action
-function registerAccount() {
-  let name = regNameInput.value();
-  let lastName = regLastNameInput.value();
-  let email = regEmailInput.value();
-  let password = regPasswordInput.value();
-  alert(`Account created for ${name} ${lastName}`);
-  closePopup();
-}
+  const registerAccount = async () => {
+    const email = regEmailInput.value();
+    const password = regPasswordInput.value();
+    const firstName = regNameInput.value();
+    const lastName = regLastNameInput.value();
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      localStorage.setItem("userEmail", user.email);
+      localStorage.setItem("userName", `${firstName} ${lastName}`);
+      alert(`Account created successfully for ${firstName} ${lastName}`);
+      closePopup();
+    } catch (err) {
+      console.error(err);
+      alert("Registration failed: " + err.message);
+    }
+  };
+};
+
+new p5(sketch); 
