@@ -17,7 +17,7 @@ app.get("/home", (req, res) => {
 });
 
 app.get("/test", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "parking", "parking.html"));
+  res.sendFile(path.join(__dirname, "public", "ml", "ml.html"));
 });
 
 app.get("/parking", (req, res) => {

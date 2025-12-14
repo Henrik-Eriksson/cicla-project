@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <!-- p5 + ml5 -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
+  <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script> <!-- [web:49] -->
+
+  <link rel="stylesheet" href="/ml/ml.css">
+  <title>Bike Garage Occupancy</title>
+</head>
+<body>
+  <div class="page">
+    <div class="phone">
+      <header class="header">
+        <h1>🚲 Bike Garage Occupancy</h1>
+        <p>ML5 Neural Net · predicts free spots (12 total)</p>
+      </header>
+
+      <main class="content">
+        <!-- Train card -->
+        <section class="card">
+          <h2>📚 Train model</h2>
+          <p class="hint">
+            This demo uses synthetic bike-usage data to train a neural network
+            on occupancy patterns.
+          </p>
+
+          <div class="field">
+            <label for="epochs">Training epochs</label>
+            <div class="field-row">
+              <input id="epochs" type="range" min="10" max="500" step="10" value="100">
+              <span id="epochs-value">100</span>
+            </div>
+          </div>
+          
+
+          <div class="field">
+            <label for="lr">Learning rate</label>
+            <div class="field-row">
+              <input id="lr" type="range" min="0.01" max="0.5" step="0.01" value="0.2">
+              <span id="lr-value">0.20</span>
+            </div>
+          </div>
+
+          <button id="train-btn" class="btn primary">Train model</button>
+          <div id="train-status" class="status">Model not trained yet.</div>
+            <div class="loss-chart">
+            <div class="loss-chart-header">
+                <span>Training loss</span>
+                <span id="loss-latest">–</span>
+            </div>
+            <div class="loss-chart-bar">
+                <div id="loss-line"></div>
+            </div>
+            </div>
+        </section>
+
+        <!-- Predict card -->
+        <section class="card">
+          <h2>🔮 Make prediction</h2>
+
+          <div class="field">
+            <label for="hour">Hour of day (0–23)</label>
+            <div class="field-row">
+              <input id="hour" type="range" min="0" max="23" step="1" value="9">
+              <span id="hour-value">9</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="temp">Temperature (°C)</label>
+            <div class="field-row">
+              <input id="temp" type="range" min="-10" max="40" step="1" value="15">
+              <span id="temp-value">15°C</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="rain">Is raining? (0 = no, 1 = yes)</label>
+            <div class="field-row">
+              <input id="rain" type="range" min="0" max="1" step="1" value="0">
+              <span id="rain-value">☀️ No</span>
+            </div>
+          </div>
+
+          <button id="predict-btn" class="btn" disabled>Predict</button>
+
+          <div class="prediction">
+            <div class="prediction-value" id="prediction-value">–</div>
+            <div class="prediction-sub">
+              <span id="prediction-capacity">0 / 12 spots</span>
+              <span id="prediction-conf">Confidence –</span>
+            </div>
+          </div>
+        <div class="prediction-extra">
+            <div class="prediction-row">
+                <span>Actual occupancy (closest sample)</span>
+                <span id="prediction-actual">–</span>
+            </div>
+
+            <div class="prediction-row">
+                <span>Sample of training data</span>
+            </div>
+            <table class="data-sample">
+                <thead>
+                <tr>
+                    <th>Hour</th>
+                    <th>Temp</th>
+                    <th>Rain</th>
+                    <th>Occ.</th>
+                </tr>
+                </thead>
+                <tbody id="data-sample-body"></tbody>
+            </table>
+            </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="/ml/ml.js"></script>
+</body>
+</html>

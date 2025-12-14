@@ -4,7 +4,7 @@
 
 let agents = [];               // all active agents in the scene
 let startTime;                 // when the parking session started
-let pricePerHour = 1.2;        // € per hour
+let pricePerHour = 50000;        // € per hour
 let currentPrice = 0;          // live price, updated every frame
 let parkingSessionData = null; // metadata about the selected station
 
